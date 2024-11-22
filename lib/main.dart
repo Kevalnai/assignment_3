@@ -11,33 +11,61 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Fitness Tracking App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const WorkOutEntryScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class WorkOutEntryScreen extends StatefulWidget {
+  const WorkOutEntryScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<WorkOutEntryScreen> createState() => _WorkOutEntryScreen();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _WorkOutEntryScreen extends State<WorkOutEntryScreen> {
+  final TextEditingController _caloriesGoalController = TextEditingController();
+  final TextEditingController _WorkOutEntryScreen = TextEditingController();
+  bool _isHighIntensity = false;
+  bool _usedEquipment = false;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _submitWorkout()
+  {
+    final double caloriesGoal = double.parse(_caloriesGoalController.text)?? 0;
+    final int workoutDuration = int.parse(_WorkOutEntryScreen.text)?? 0;
+
+    double totalCalories = workoutDuration * 11.4;
+    if(_usedEquipment)
+    {
+      totalCalories += 50;
+    }
+    if(_isHighIntensity)
+    {
+      totalCalories *= 1.2; 
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SummaryScreen(
+        caloriesGoal: caloriesGoal,
+        workoutDuration: workoutDuration,
+        isHighIntensity: _isHighIntensity,
+        usedEquipment: _usedEquipment,
+        totalcalories: totalCalories,
+      ),
+      ),
+    );
   }
+
+
+  
 
   @override
   Widget build(BuildContext context) {
